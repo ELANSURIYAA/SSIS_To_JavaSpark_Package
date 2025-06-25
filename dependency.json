@@ -1,0 +1,7 @@
+{
+  "Package.dtsx": [
+    "OrderActivitySyncErrorLog",
+    "OrderActivityUpdates",
+    "Order_Activity__c"
+  ]
+}

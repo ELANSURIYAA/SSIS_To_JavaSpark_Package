@@ -1,0 +1,28 @@
+{
+  "title": "SSIS Design Pattern Analysis and Java Spark Optimization Recommendations",
+  "pattern_summary": [
+    {
+      "pattern": "ST-TA-DQ-DI",
+      "frequency": "1 occurrence",
+      "percentage": "100%",
+      "description": "This pattern involves reading from a database table source (ST), writing to an API target (TA), implementing data quality checks and rejection handling (DQ), and performing insert operations for error logging (DI)",
+      "Files That Follow This Design Pattern": "Package.dtsx"
+    }
+  ],
+  "detailed_patterns": [
+    {
+      "pattern": "ST-TA-DQ-DI",
+      "description": "This pattern reads data from SQL database tables (OrderActivityUpdates), sends it to Salesforce API (Order_Activity__c object), handles errors with rejection paths, and logs failures to error tables (OrderActivitySyncErrorLog)",
+      "spark_suitability": "High - Spark is well-suited for this ETL pattern with its robust API connectivity and error handling capabilities",
+      "recommendations": [
+        "Use Spark DataFrames to read from source tables with optimized partitioning based on ExtOrderID__c field",
+        "Implement Spark's error handling with try-catch blocks around the Salesforce API calls to capture and redirect failed records",
+        "Use Spark's foreachBatch or foreachPartition for API calls to Salesforce to control parallelism and avoid API throttling",
+        "Implement circuit breaker patterns for API resilience to handle temporary Salesforce API unavailability",
+        "Use Spark's repartition() before writing error records to optimize the insert operations to error log tables",
+        "Implement checkpointing for long-running jobs to enable recovery from failures"
+      ],
+      "Files That Follow This Design Pattern": "Package.dtsx"
+    }
+  ]
+}

@@ -1,0 +1,6 @@
+{
+  "Package.dtsx": {
+    "design_pattern": ["SF", "ST", "TT", "DQ", "DI", "JL", "OO"],
+    "oo_reason": "The file contains Salesforce-specific components and external integration logic that do not fit into predefined categories."
+  }
+}

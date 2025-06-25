@@ -1,0 +1,803 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Design Pattern Analysis and Optimization Recommendations</title>
+  <script src="https://d3js.org/d3.v7.min.js"></script>
+  <style>
+   
+    body {
+      font-family: 'Times New Roman', Times, serif;
+      padding: 20px;
+      background-color: #f9f9f9;
+    }
+    h1 {
+      text-align: center;
+      margin-bottom: 40px;
+      color: #333;
+    }
+    .logo-container {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 20px;
+    }
+    .logo-container img {
+      height: 60px;
+    }
+    .container {
+      display: flex;
+      justify-content: space-between;
+      gap: 40px;
+      margin-bottom: 50px;
+    }
+    .section {
+      flex: 1;
+      background: white;
+      padding: 20px;
+      border-radius: 10px;
+      box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+      display: none;
+    }
+    ul, ol {
+      list-style-type: decimal;
+      padding-left: 20px;
+    }
+    a {
+      text-decoration: none;
+      color: #1a73e8;
+      font-weight: bold;
+    }
+    a:hover {
+      text-decoration: underline;
+      color: #1558b0;
+    }
+    h2, h3 {
+      text-align: center;
+      color: #444;
+    }
+   
+    .graph-container {
+      width: 95%;
+      height: 600px;
+      margin: 30px auto;
+      border: 2px solid #ccc;
+      border-radius: 12px;
+      background-color: #fff;
+      box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+      position: relative;
+      overflow: hidden;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+    .graph-title {
+      position: absolute;
+      top: 10px;
+      left: 20px;
+      font-size: 20px;
+      font-weight: bold;
+      background: white;
+      padding: 5px 12px;
+      z-index: 10;
+      border-radius: 8px;
+      border: 1px solid #ccc;
+    }
+    svg {
+      width: 100%;
+      height: 100%;
+    }
+    .label {
+      font-size: 12px;
+      pointer-events: none;
+      fill: #333;
+    }
+    .toggle-btn {
+      padding: 10px 20px;
+      margin: 0 10px;
+      background-color: #95d5b2;
+      color: #000;
+      border: 1px solid #74c69d;
+      border-radius: 5px;
+      cursor: pointer;
+      font-family: 'Times New Roman', Times, serif;
+      font-weight: bold;
+      box-shadow: 2px 2px 6px rgba(0, 0, 0, 0.2);
+      transition: all 0.3s ease;
+    }
+    .toggle-btn:hover {
+      background-color: #74c69d;
+      box-shadow: 3px 3px 8px rgba(0, 0, 0, 0.3);
+    }
+    .graph-btn {
+      padding: 8px 16px;
+      margin: 10px 5px;
+      background-color: #b7e4c7;
+      color: #000;
+      border: 1px solid #74c69d;
+      border-radius: 5px;
+      cursor: pointer;
+      font-family: 'Times New Roman', Times, serif;
+      font-weight: bold;
+      box-shadow: 1px 1px 4px rgba(0, 0, 0, 0.2);
+      transition: all 0.3s ease;
+    }
+    .graph-btn:hover, .graph-btn.active {
+      background-color: #52b788;
+      box-shadow: 2px 2px 6px rgba(0, 0, 0, 0.3);
+    }
+    .graph-container {
+      display: none;
+    }
+    .graph-container.active {
+      display: flex;
+    }
+    .dropdown-content a {
+  display: block;
+  padding: 10px 15px;
+  text-decoration: none;
+  color: #333;
+  font-family: 'Times New Roman', Times, serif;
+}
+ 
+.dropdown-content a:hover {
+  background-color: #f0f0f0;
+}
+.tooltip {
+  position: absolute;
+  background: rgba(0, 0, 0, 0.8);
+  color: white;
+  padding: 10px;
+  border-radius: 5px;
+  font-size: 12px;
+  pointer-events: none;
+  z-index: 1000;
+  max-width: 250px;
+}
+
+.tooltip-header {
+  font-weight: bold;
+  margin-bottom: 5px;
+}
+
+.files-list {
+  margin-top: 5px;
+  max-height: 150px;
+  overflow-y: auto;
+}
+ 
+  </style>
+</head>
+<!-- Inline Documentation Container for Root Node Click -->
+<div id="inline-documentation" style="display:none; margin-top: 20px; padding: 15px; border: 1px solid #ccc; border-radius: 8px; background: #fafafa;">
+  <button id="back-btn" style="margin-bottom: 15px; padding: 6px 12px; font-family: 'Times New Roman', serif; font-weight: bold;">
+    ← Back
+  </button>
+  <div id="inline-doc-content">
+    <!-- Documentation list will be cloned here dynamically -->
+  </div>
+</div>
+ 
+ 
+<body>
+  <div class="logo-container">
+    <img src="images/ASCENDION.png" alt="Ascendion Logo">
+    <img src="images/DMS.jpg" alt="DMS Logo">
+  </div>
+ 
+  <h1>Design Pattern Analysis and Optimization Recommendations</h1>
+ 
+  <div style="text-align: center; margin-bottom: 20px;">
+    <button class="toggle-btn" onclick="showSection('design-pattern')">Design Pattern</button>
+    <button class="toggle-btn" onclick="showSection('documentation-dependency')">Documentation and Dependency</button>
+    <button class="toggle-btn" onclick="showSection('dependency-graphs')">Dependency Graphs</button>
+    <button class="toggle-btn" onclick="showSection('analysis-plan')">JavaSpark</button>
+  </div>
+ 
+ 
+  <div id="design-pattern" class="section">
+    <h2>Design Pattern</h2>
+    <div style="position: relative;">
+  <h2 style="display: inline-block; margin: 0;">Design Pattern</h2>
+ 
+  <!-- Info icon at top-right -->
+  <span id="legend-toggle"
+        style="cursor: pointer; font-weight: bold; font-size: 24px; position: absolute; right: 10px; top: 0;"
+        title="Click to show/hide legend">&#9432;</span>
+ 
+  <!-- Hidden legend container -->
+  <div id="legend-popup" style="
+    display: none;
+    position: absolute;
+    right: 10px;
+    top: 30px;
+    background: white;
+    border: 1px solid #ccc;
+    box-shadow: 0 3px 8px rgba(0,0,0,0.2);
+    padding: 15px;
+    max-width: 320px;
+    font-family: 'Times New Roman', serif;
+    font-size: 14px;
+    z-index: 100;
+  ">
+    <table style="width: 100%; border-collapse: collapse;">
+      <thead>
+        <tr>
+          <th style="border-bottom: 1px solid #ccc; text-align: left; padding: 6px;">Short Form</th>
+          <th style="border-bottom: 1px solid #ccc; text-align: left; padding: 6px;">Description</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr><td style="padding: 4px;">SF</td><td style="padding: 4px;">Source File</td></tr>
+        <tr><td style="padding: 4px;">ST</td><td style="padding: 4px;">Source Table</td></tr>
+        <tr><td style="padding: 4px;">SA</td><td style="padding: 4px;">Source API</td></tr>
+        <tr><td style="padding: 4px;">TAC</td><td style="padding: 4px;">Transformation Arithmetic Calcs</td></tr>
+        <tr><td style="padding: 4px;">TSC</td><td style="padding: 4px;">Transformation Stats Calcs</td></tr>
+        <tr><td style="padding: 4px;">TX</td><td style="padding: 4px;">Transformation External Code</td></tr>
+        <tr><td style="padding: 4px;">TAG</td><td style="padding: 4px;">Transformation Aggregate Functions like Sum, Count</td></tr>
+        <tr><td style="padding: 4px;">JL</td><td style="padding: 4px;">Join with Another Table</td></tr>
+        <tr><td style="padding: 4px;">Tem</td><td style="padding: 4px;">Temporary Tables/Files</td></tr>
+        <tr><td style="padding: 4px;">DQ</td><td style="padding: 4px;">Data Quality and Rejection</td></tr>
+        <tr><td style="padding: 4px;">DU</td><td style="padding: 4px;">DML - Update</td></tr>
+        <tr><td style="padding: 4px;">DI</td><td style="padding: 4px;">DML - Insert</td></tr>
+        <tr><td style="padding: 4px;">DD</td><td style="padding: 4px;">DML - Delete</td></tr>
+        <tr><td style="padding: 4px;">DM</td><td style="padding: 4px;">DML - Merge</td></tr>
+        <tr><td style="padding: 4px;">DUN</td><td style="padding: 4px;">DML - Union</td></tr>
+        <tr><td style="padding: 4px;">DA</td><td style="padding: 4px;">DML - Append</td></tr>
+        <tr><td style="padding: 4px;">DS</td><td style="padding: 4px;">DML - Sort</td></tr>
+        <tr><td style="padding: 4px;">TF</td><td style="padding: 4px;">Target File</td></tr>
+        <tr><td style="padding: 4px;">TT</td><td style="padding: 4px;">Target Table</td></tr>
+        <tr><td style="padding: 4px;">TA</td><td style="padding: 4px;">Target API</td></tr>
+        <tr><td style="padding: 4px;">OO</td><td style="padding: 4px;">Others not in above category</td></tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+ 
+    <h3><a href="patterns.html">List of Design Patterns</a></h3>
+    <input type="text" id="pattern-search" placeholder="Search pattern..." style="margin-bottom: 15px; padding: 8px; width: 100%; font-size: 16px; border: 1px solid #ccc; border-radius: 5px;">
+    <ol id="pattern-list"></ol>
+  </div>
+ 
+  <div id="documentation-dependency" class="section">
+    <h2>Documentation and Dependency</h2>
+    <h3>List of Files</h3>
+    <input type="text" id="doc-search" placeholder="Search file..." style="margin-bottom: 15px; padding: 8px; width: 100%; font-size: 16px; border: 1px solid #ccc; border-radius: 5px;">
+    <ol id="doc-file-list"></ol>
+  </div>
+ 
+  <div id="analysis-plan" class="section">
+    <h2>Analysis and Plan</h2>
+    <h3>List of Files</h3>
+    <input type="text" id="analysis-search" placeholder="Search file..." style="margin-bottom: 15px; padding: 8px; width: 100%; font-size: 16px; border: 1px solid #ccc; border-radius: 5px;">
+    <ol id="analysis-file-list"></ol>
+  </div>
+  <div id="tooltip" style="position: absolute; opacity: 0;"></div>
+ 
+  <div id="dependency-graphs" class="section">
+    <h2>Dependency Graph Visualizations</h2>
+    <div style="text-align: center; margin: 20px 0;">
+      <div class="dropdown" style="display: inline-block; position: relative;">
+  <button class="graph-btn">Dependency Graphs ▼</button>
+  <div class="dropdown-content" style="
+    display: none;
+    position: absolute;
+    background-color: white;
+    min-width: 200px;
+    border: 1px solid #ccc;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.15);
+    z-index: 1000;
+  ">
+    <a href="#" onclick="showGraph('dependency-graph-1'); hideDropdown(event);">Dependency Graph 1</a>
+    <a href="#" onclick="showGraph('dependency-graph-2'); hideDropdown(event);">Dependency Graph 2</a>
+  </div>
+</div>
+ 
+      <button class="graph-btn" onclick="showGraph('radial-dependency')">Radial Dependency Chart</button>
+      <button class="graph-btn" onclick="showGraph('treemap-dependency')">Treemap of Dependencies</button>
+    </div>
+ 
+    <!-- Graph containers -->
+    <div id="graphs-wrapper"></div>
+ 
+    <!-- Radial Graph Container -->
+    <div id="radial-dependency" class="graph-container">
+      <div class="graph-title">Radial Dependency Chart</div>
+      <svg id="radial"></svg>
+    </div>
+ 
+   
+<!-- Treemap Container -->
+    <div id="treemap-dependency" class="graph-container">
+      <div class="graph-title">Treemap of Dependencies</div>
+      <svg id="treemap"></svg>
+      <div id="treemap-tooltip" class="tooltip" style="display: none;"></div>
+     
+    </div>
+  </div>
+ 
+  <script>
+    // Function to show selected section
+    function showSection(sectionId) {
+      document.querySelectorAll('.section').forEach(section => {
+        section.style.display = 'none';
+      });
+      document.getElementById(sectionId).style.display = 'block';
+    }
+ 
+    // Function to show selected graph
+    function showGraph(graphId) {
+      document.querySelectorAll('.graph-container').forEach(graph => {
+        graph.classList.remove('active');
+      });
+      document.querySelectorAll('.graph-btn').forEach(btn => {
+        btn.classList.remove('active');
+      });
+     
+      document.getElementById(graphId).classList.add('active');
+     
+      // Find and activate the button that corresponds to this graph
+      const buttons = document.querySelectorAll('.graph-btn');
+      for (let btn of buttons) {
+        if (btn.onclick.toString().includes(graphId)) {
+          btn.classList.add('active');
+        }
+      }
+    }
+ 
+    const width = 800, height = 600;
+   
+    function toggleAllGraphs() {
+      const graphSection = document.getElementById('all-graphs');
+      const isHidden = graphSection.style.display === 'none';
+      graphSection.style.display = isHidden ? 'flex' : 'none';
+    }
+ 
+    fetch('Design_Pattern.json')
+      .then(response => response.json())
+      .then(data => {
+        const patternList = document.getElementById('pattern-list');
+        data.pattern_summary.forEach(pattern => {
+          const li = document.createElement('li');
+          const a = document.createElement('a');
+          a.href = `pattern-detail.html?pattern=${encodeURIComponent(pattern.pattern)}`;
+          a.textContent = pattern.pattern;
+          li.appendChild(a);
+          patternList.appendChild(li);
+        });
+      });
+ 
+    document.getElementById('pattern-search').addEventListener('input', function () {
+      const filter = this.value.toLowerCase();
+      document.querySelectorAll('#pattern-list li').forEach(li => {
+        li.style.display = li.textContent.toLowerCase().includes(filter) ? '' : 'none';
+      });
+    });
+ 
+    function buildTree(data) {
+      const nodes = {};
+      const childrenSet = new Set();
+      Object.keys(data).forEach(name => nodes[name] = { name, children: [] });
+      for (const [parent, children] of Object.entries(data)) {
+        children.forEach(child => {
+          if (nodes[child]) {
+            nodes[parent].children.push(nodes[child]);
+            childrenSet.add(child);
+          }
+        });
+      }
+      const roots = Object.keys(data).filter(k => !childrenSet.has(k));
+      return nodes[roots[0]]; // return the first root
+    }
+ 
+    fetch('dependency.json')
+      .then(response => response.json())
+      .then(data => {
+       
+        const docList = document.getElementById('doc-file-list');
+        const analysisList = document.getElementById('analysis-file-list');
+        Object.keys(data).forEach(filename => {
+          ['file-detail.html', 'file-detail2.html'].forEach((link, i) => {
+            const li = document.createElement('li');
+            const a = document.createElement('a');
+            a.href = `${link}?file=${encodeURIComponent(filename)}`;
+            a.textContent = filename;
+            li.appendChild(a);
+            (i === 0 ? docList : analysisList).appendChild(li.cloneNode(true));
+          });
+        });
+ 
+        // Force Graphs
+        const rootNodes = new Set(Object.keys(data));
+        const graphGroups = getDisconnectedSubgraphs(data);
+        const wrapper = document.getElementById('graphs-wrapper');
+ 
+        graphGroups.forEach((group, index) => {
+          const container = document.createElement("div");
+          container.className = "graph-container";
+          container.id = `dependency-graph-${index + 1}`;
+          container.innerHTML = `<div class="graph-title">Dependency Graph ${index + 1}</div>`;
+          wrapper.appendChild(container);
+ 
+          const svg = d3.select(container).append("svg");
+          const g = svg.append("g");
+ 
+          const nodesMap = {};
+          const links = [];
+ 
+          group.forEach(([source, target]) => {
+            if (!nodesMap[source]) nodesMap[source] = { id: source };
+            if (!nodesMap[target]) nodesMap[target] = { id: target };
+            links.push({ source, target });
+          });
+ 
+          const nodes = Object.values(nodesMap);
+          const width = container.clientWidth;
+          const height = container.clientHeight;
+ 
+          const zoom = d3.zoom().scaleExtent([0.2, 4]).on("zoom", event => g.attr("transform", event.transform));
+          svg.call(zoom);
+ 
+          const simulation = d3.forceSimulation(nodes)
+            .force("link", d3.forceLink(links).id(d => d.id).distance(120))
+            .force("charge", d3.forceManyBody().strength(-200))
+            .force("center", d3.forceCenter(width / 2, height / 2));
+ 
+          const link = g.append("g").attr("stroke", "#aaa").attr("stroke-opacity", 0.6)
+            .selectAll("line").data(links).join("line").attr("stroke-width", 1);
+ 
+          const node = g.append("g").selectAll("circle").data(nodes).join("circle")
+            .attr("r", 8)
+            .attr("fill", d => rootNodes.has(d.id) ? "#1f77b4" : "#ff7f0e")
+            .call(d3.drag()
+              .on("start", (event, d) => { if (!event.active) simulation.alphaTarget(0.3).restart(); d.fx = d.x; d.fy = d.y; })
+              .on("drag", (event, d) => { d.fx = event.x; d.fy = event.y; })
+              .on("end", (event, d) => { if (!event.active) simulation.alphaTarget(0); d.fx = null; d.fy = null; })
+            );
+ 
+          const label = g.append("g").selectAll("text").data(nodes).join("text")
+            .attr("class", "label").text(d => d.id.replace(/^file_/i, '').replace(/^File_/, ''));
+ 
+ 
+          simulation.on("tick", () => {
+            link.attr("x1", d => d.source.x).attr("y1", d => d.source.y)
+                .attr("x2", d => d.target.x).attr("y2", d => d.target.y);
+            node.attr("cx", d => d.x).attr("cy", d => d.y);
+            label.attr("x", d => d.x + 10).attr("y", d => d.y + 4);
+          });
+        });
+ 
+           
+            const radialRoot = d3.hierarchy(buildTree(data));
+            const radius = Math.min(width, height) / 2;
+            const radialLayout = d3.cluster().size([2 * Math.PI, radius - 100]);
+            radialLayout(radialRoot);
+            const isRootFile = (name) => Object.keys(data).includes(name);
+ 
+ 
+            const radialSvg = d3.select("#radial")
+                .attr("viewBox", [-width / 2, -height / 2, width, height]);
+ 
+            const rline = d3.lineRadial()
+                .angle(d => d.x)
+                .radius(d => d.y);
+ 
+            radialSvg.append("g")
+                .selectAll("path")
+                .data(radialRoot.links())
+                .join("path")
+                .attr("d", d => rline([d.source, d.target]))
+                .attr("fill", "none")
+                .attr("stroke", "#ccc");
+ 
+            radialSvg.append("g")
+                .selectAll("circle")
+                .data(radialRoot.descendants())
+                .join("circle")
+                .attr("transform", d => `rotate(${d.x * 180 / Math.PI - 90}) translate(${d.y},0)`)
+                .attr("r", 3)
+                .attr("fill", "#69b3a2")
+.style("cursor", "pointer")
+.on("click", (event, d) => {
+  const fileName = d.data.name;
+ 
+  // Open the documentation page for this file
+  window.location.href = `file-detail.html?file=${encodeURIComponent(fileName)}`;
+});
+ 
+ 
+ 
+ 
+            radialSvg.append("g")
+                .selectAll("text")
+                .data(radialRoot.descendants())
+                .join("text")
+                .attr("transform", d => `
+                    rotate(${d.x * 180 / Math.PI - 90})
+                    translate(${d.y},0)
+                    rotate(${d.x >= Math.PI ? 180 : 0})
+                `)
+                .attr("dy", "0.31em")
+                .attr("x", d => d.x < Math.PI ? 6 : -6)
+                .style("text-anchor", d => d.x < Math.PI ? "start" : "end")
+                .text(d => d.data.name.replace(/^file_/i, '').replace(/^File_/, ''));
+ 
+               
+   
+  function getDependentsCount(target, data) {
+  let count = 0;
+  for (const [parent, children] of Object.entries(data)) {
+    if (children.includes(target)) {
+      count += 1;
+    }
+  }
+  return count || 1; // return 1 if no dependents, to keep it visible
+}
+ 
+  function getFlatDependencyData(data) {
+  const countMap = {};
+  const filesMap = {}; // Store which files use each dependency
+  
+  // Count how many times each file appears as a dependency
+  Object.entries(data).forEach(([parent, children]) => {
+    children.forEach(dep => {
+      countMap[dep] = (countMap[dep] || 0) + 1;
+      
+      // Track which files use this dependency
+      if (!filesMap[dep]) filesMap[dep] = [];
+      filesMap[dep].push(parent);
+    });
+  });
+  
+  // Make sure all files from the keys are also included
+  Object.keys(data).forEach(file => {
+    if (!countMap[file]) {
+      countMap[file] = 0;
+      filesMap[file] = []; // Empty array for files not used as dependencies
+    }
+  });
+  
+  // Convert to flat array with files information
+  return Object.entries(countMap).map(([name, value]) => ({ 
+    name, 
+    value,
+    filesUsing: filesMap[name] || [] // Include files using this dependency
+  }));
+}
+ 
+  fetch('dependency.json')
+  .then(res => res.json())
+  .then(data => {
+   
+    const width = 400, height = 300;
+ 
+    const flatData = getFlatDependencyData(data);
+ 
+const root = d3.hierarchy({ children: flatData })
+  .sum(d => d.value)
+  .sort((a, b) => b.value - a.value);
+ 
+ 
+    d3.treemap()
+      .size([width, height])
+      .padding(2)(root);
+ 
+    const color = d3.scaleOrdinal(d3.schemeCategory10);
+ 
+    const svg = d3.select("#treemap")
+      .attr("viewBox", [0, 0, width, height])
+      .style("font", "11px sans-serif");
+ 
+    const node = svg.selectAll("g")
+      .data(root.leaves())
+      .join("g")
+      .attr("transform", d => `translate(${d.x0},${d.y0})`);
+    // Create a color scale based on number of dependents
+const colorScale = d3.scaleQuantize()
+  .domain(d3.extent(flatData, d => d.value)) // min and max values like 0–10
+  .range(d3.schemeBlues[6]); // 6 shades of blue
+ 
+    node.append("rect")
+      .attr("id", d => d.data.name)
+      .attr("width", d => d.x1 - d.x0)
+      .attr("height", d => d.y1 - d.y0)
+      .attr("fill", d => colorScale(d.value))
+ // or any consistent color you want
+     
+ 
+      .attr("stroke", "#fff")
+.on("click", function(event, d) {
+  // Create or update a details panel
+  let detailsPanel = d3.select("body").select("#dependency-details");
+  
+  if (detailsPanel.empty()) {
+    detailsPanel = d3.select("body").append("div")
+      .attr("id", "dependency-details")
+      .style("position", "fixed")
+      .style("top", "100px")
+      .style("right", "20px")
+      .style("width", "300px")
+      .style("background", "white")
+      .style("border", "1px solid #ccc")
+      .style("border-radius", "5px")
+      .style("padding", "15px")
+      .style("box-shadow", "0 4px 8px rgba(0,0,0,0.2)")
+      .style("z-index", "1000");
+      
+    detailsPanel.append("button")
+      .style("position", "absolute")
+      .style("top", "5px")
+      .style("right", "5px")
+      .style("background", "none")
+      .style("border", "none")
+      .style("font-size", "16px")
+      .style("cursor", "pointer")
+      .text("×")
+      .on("click", function() {
+        detailsPanel.style("display", "none");
+      });
+      
+    detailsPanel.append("h3")
+      .attr("id", "details-title");
+      
+    detailsPanel.append("div")
+      .attr("id", "details-content");
+  } else {
+    detailsPanel.style("display", "block");
+  }
+  
+  const filesUsing = d.data.filesUsing || [];
+  
+  detailsPanel.select("#details-title").text(d.data.name);
+  
+  let content = `<p>Used ${d.value} time${d.value !== 1 ? 's' : ''}</p>`;
+  
+  if (filesUsing.length > 0) {
+    content += `
+      <p><strong>Used by:</strong></p>
+      <ul style="padding-left: 15px; margin-top: 3px; max-height: 300px; overflow-y: auto;">
+        ${filesUsing.map(file => `<li>${file}</li>`).join('')}
+      </ul>
+    `;
+  }
+  
+  detailsPanel.select("#details-content").html(content);
+})      
+.on("mouseout", function() {
+  d3.select(this).attr("stroke", "#fff").attr("stroke-width", 1);
+  d3.select("#treemap-tooltip").style("display", "none");
+})
+.on("mousemove", function(event) {
+  d3.select("#treemap-tooltip")
+    .style("left", (event.pageX + 10) + "px")
+    .style("top", (event.pageY - 10) + "px");
+})
+
+ 
+ 
+ 
+    node.append("title")
+      .text(d => `${d.data.name}\n${d.value}`);
+ 
+    node.append("text")
+      .attr("x", 3)
+      .attr("y", 13)
+      .text(d => d.data.name.replace(/^file_/i, '').replace(/^File_/, ''))
+ 
+      .attr("fill", "white")
+      .style("font-size", "10px")
+      .style("pointer-events", "none");
+    node.append("text")
+  .attr("x", 3)
+  .attr("y", 25) // position slightly lower than file name
+  .text(d => `(${d.value})`)
+  .attr("fill", "white")
+  .style("font-size", "10px")
+  .style("pointer-events", "none");
+ 
+ 
+    // === Generate Legend for Root Files ===
+   
+ 
+     
+    createRootNodesGraph(data);
+ 
+  });
+ 
+    // ============== Helper to build hierarchy ==============
+            function buildTree(flat) {
+                const map = {}, root = { name: "root", children: [] };
+                for (const [src, targets] of Object.entries(flat)) {
+                    if (!map[src]) map[src] = { name: src, children: [] };
+                    targets.forEach(tgt => {
+                        if (!map[tgt]) map[tgt] = { name: tgt, children: [] };
+                        map[src].children.push(map[tgt]);
+                    });
+                }
+                Object.values(map).forEach(node => {
+                    if (!Object.values(flat).flat().includes(node.name)) {
+                        root.children.push(node);
+                    }
+                });
+                return root;
+            }
+        });
+       
+    function getDisconnectedSubgraphs(data) {
+      const graph = {}, edges = [];
+      for (const [src, targets] of Object.entries(data)) {
+        if (!graph[src]) graph[src] = new Set();
+        targets.forEach(tgt => {
+          if (!graph[tgt]) graph[tgt] = new Set();
+          graph[src].add(tgt);
+          graph[tgt].add(src);
+          edges.push([src, tgt]);
+        });
+      }
+      const visited = new Set(), subgraphs = [];
+      function dfs(node, groupEdges) {
+        visited.add(node);
+        graph[node].forEach(neighbor => {
+          const pair = [node, neighbor];
+          const reverse = [neighbor, node];
+          if (!groupEdges.some(e => (e[0] === pair[0] && e[1] === pair[1]) || (e[0] === reverse[0] && e[1] === reverse[1]))) {
+            groupEdges.push(pair);
+          }
+          if (!visited.has(neighbor)) dfs(neighbor, groupEdges);
+        });
+      }
+      Object.keys(graph).forEach(node => {
+        if (!visited.has(node)) {
+          const group = [];
+          dfs(node, group);
+          if (group.length > 0) subgraphs.push(group);
+        }
+      });
+      return subgraphs;
+    }
+   
+    // Show design pattern section by default
+    showSection('design-pattern');
+   
+    // Add event listener to ensure graphs are properly initialized when dependency graphs section is shown
+    document.querySelector('button[onclick="showSection(\'dependency-graphs\')"]').addEventListener('click', function() {
+      // Show the first graph by default when switching to the dependency graphs section
+      setTimeout(() => {
+        showGraph('dependency-graph-1');
+      }, 100);
+    });
+    // Show/hide dropdown when main button is clicked
+document.querySelector('.dropdown .graph-btn').addEventListener('click', function () {
+  const dropdown = this.nextElementSibling;
+  dropdown.style.display = dropdown.style.display === 'block' ? 'none' : 'block';
+});
+ 
+// Hide dropdown after selecting a graph
+function hideDropdown(event) {
+  event.preventDefault();
+  document.querySelectorAll('.dropdown-content').forEach(menu => menu.style.display = 'none');
+}
+document.getElementById('back-btn').addEventListener('click', () => {
+  // Hide the inline documentation container
+  document.getElementById('inline-documentation').style.display = 'none';
+ 
+  // Show the tabs container again
+  document.getElementById('tabs-container').style.display = 'block';
+ 
+  // Show the default tab (e.g., design-pattern)
+  showSection('design-pattern');
+});
+document.getElementById('legend-toggle').addEventListener('click', function() {
+  const legend = document.getElementById('legend-popup');
+  if (legend.style.display === 'block') {
+    legend.style.display = 'none';
+  } else {
+    legend.style.display = 'block';
+  }
+});
+ 
+ 
+ 
+  </script>
+</body>
+</html>
