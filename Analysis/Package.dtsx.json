@@ -1,0 +1,135 @@
+{
+"Package.dtsx": {
+"1. Script Overview": {
+"Summary": "This SSIS package facilitates data integration and processing tasks, including extracting data from an OLE DB source, transforming it, and loading it into Salesforce and other destinations. It also handles error logging and updates to specific tables.",
+"Functional Modules": [
+{
+"Name": "Data Flow Task",
+"Components": [
+{
+"Name": "OLE DB Source",
+"Type": "Source",
+"Details": "Extracts data from a database view."
+},
+{
+"Name": "Salesforce Destination",
+"Type": "Destination",
+"Details": "Loads data into Salesforce objects."
+},
+{
+"Name": "OLE DB Destination",
+"Type": "Destination",
+"Details": "Loads data into a database table."
+}
+]
+},
+{
+"Name": "Execute T-SQL Statement Task",
+"Details": "Executes SQL commands for database updates."
+},
+{
+"Name": "Clear Error Log",
+"Details": "Clears the error log table in the database."
+}
+],
+"Data Pipelines Overview": "Data is extracted from an OLE DB source, transformed, and loaded into Salesforce objects and database tables. Error outputs are handled and logged."
+},
+"2. Complexity Metrics": {
+"Total Lines of Code": 1252,
+"Dataset Count": 3,
+"Transform Count and Types": "None",
+"Join Analysis": {
+"Join Count": 0,
+"Join Types": []
+},
+"Project, Sort, Dedup, Rollup Counts": {
+"Project Count": 0,
+"Sort Count": 0,
+"Dedup Count": 0,
+"Rollup Count": 0
+},
+"Child Workflows or Module Calls": 0,
+"Output or Store Operations": 2,
+"Conditional Logic Count": 1,
+"Macro or Function Module Reuse": 0,
+"Conversion Complexity Score": {
+"Score (0–100)": 65,
+"Reasoning": [
+"No joins or complex transforms.",
+"Minimal conditional logic.",
+"External dependency on Salesforce API."
+]
+}
+},
+"3. Feature Compatibility Check": {
+"Incompatible Features": [
+"Implicit schema typing.",
+"Recordsets and RECORD structures."
+],
+"Examples of Challenging Constructs": [
+"Implicit typing in OLE DB source.",
+"Complex RECORD structures in Salesforce Destination."
+]
+},
+"4. Manual Adjustments for Java Spark Migration": {
+"Transform Refactoring": "Refactor TRANSFORMs into Spark UDFs where applicable.",
+"Schema Redefinition": "Convert RECORD structures to case classes or schema objects.",
+"Join Handling Strategy": "No joins present, minimal adjustments needed.",
+"Complex Ops Handling": "Handle error logging using Spark's logging framework.",
+"Output Refactoring": "Rewrite OUTPUTs to HDFS or Parquet using Spark DataFrame write operations."
+},
+"5. Optimization Techniques in Spark": {
+"Join Optimization": "Not applicable.",
+"Partitioning Strategy": "Partition datasets based on key fields for efficient processing.",
+"Caching Strategy": "Cache intermediate results for repeated access.",
+"Code Optimization Techniques": "Use Catalyst optimizer hints for performance tuning.",
+"Refactor vs Rebuild Recommendation": {
+"Approach": "Refactor with minimal changes.",
+"Justification": "The existing logic is straightforward with minimal complexity, making refactoring more efficient than rebuilding."
+}
+},
+"6. Cost Estimation": {
+"Java Spark Runtime Cost": {
+"Cluster Configuration": {
+"Number of Executors": 4,
+"Executor Memory": "16 GB",
+"Driver Memory": "8 GB"
+},
+"Approximate Data Volume Processed": {
+"Input Data": "50–100 GB",
+"Output Data": "10–15 GB"
+},
+"Time Taken for Each Phase": {
+"Shuffle-heavy Joins": "Not applicable.",
+"Wide Transforms": "1 hour",
+"Output Writes": "30 minutes"
+},
+"Cost Model": {
+"Pricing Basis": "Cloud provider pricing details (e.g., DBU cost per hour)",
+"Total Estimated Cost": "Example calculation showing cost formula"
+},
+"Justification": [
+"The cluster configuration ensures efficient processing of the estimated data volume.",
+"Minimal joins and transforms reduce runtime costs."
+]
+}
+},
+"7. Code Fixing and Data Recon Testing Effort Estimation": {
+"Estimated Effort in Hours": {
+"Manual Refactoring": 20,
+"Data Reconciliation Testing": 15,
+"Syntax Translation Adjustments": 10,
+"Optimization and Performance Tuning": 10
+},
+"Major Contributors to Effort": {
+"Nested TRANSFORM Refactoring": 5,
+"Output Refactoring for Spark Writes": 10,
+"Schema Management Effort": 10
+}
+},
+"8. API Cost": {
+"apiCost": "0.013452 USD"
+}
+}
+}
+
